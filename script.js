@@ -667,7 +667,14 @@ const batch = db.batch();
             setIsGenerating(true);
             showToast(`Đang tạo nhận xét cho ${allTargets.length} học sinh...`, 'info', '⏳', 2000);
             
-            
+            const BATCH_SIZE = 1;
+            let successCount = 0;
+            for (let i = 0; i < allTargets.length; i += BATCH_SIZE) {
+              const batch = allTargets.slice(i, i + BATCH_SIZE);
+              const studentContexts = batch.map(stu => {
+                const d = studentData[stu.id] || {};
+                const draft = draftData[stu.id] || {};
+                let info = "";
                 
                 if (viewMode === 'subject') {
                   const subName = subjects.find(s=>s.id===selectedSubId)?.name;
