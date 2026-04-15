@@ -695,7 +695,12 @@ const batch = db.batch();
                 }
                 return { studentId: stu.id, studentName: stu.name, context: info, note: draft.note || d.note || "" };
               });
-              
+              // 👉 GỌI API Ở ĐÂY
+  await callAI(studentContexts);
+
+  // 👉 THÊM NGHỈ SAU MỖI BATCH
+  await delay(1000); // nghỉ 1 giây (tùy chỉnh)
+}
                const systemPrompt = `
 Bạn là giáo viên Tiểu học tại Việt Nam, có kinh nghiệm nhận xét học sinh theo Thông tư 27.
 
