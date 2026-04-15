@@ -780,12 +780,13 @@ Hãy viết nhận xét cho từng học sinh theo đúng ID và trả về đú
     "Authorization": `Bearer ${apiKey}`
   },
   body: JSON.stringify({
-    model: "openai/gpt-oss-120b",
+    model: "llama-3.3-70b-versatile",
     messages: [
       { role: "system", content: systemPrompt },
       { role: "user", content: userInstruction }
     ],
-    temperature: 0.7
+    temperature: 0.9,
+          top-p:0,9
   })
 });
 
