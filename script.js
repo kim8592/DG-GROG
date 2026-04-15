@@ -710,10 +710,6 @@ QUY TẮC CHUNG:
 - Không lặp lại tên môn học hoặc tên tiêu chí trong câu.
 - Tuyệt đối không ghi lại mức đạt (T, H/Đ, C).
 - Bắt buộc dùng tiếng Việt 100%.
-NỘI DUNG NHẬN XÉT:
-- Luôn khen điểm mạnh cụ thể (không khen chung chung).
-- Nhận xét phải dựa sát vào dữ liệu (mức đánh giá).
-- Viết tự nhiên như lời nói, không máy móc.
 
 PHONG CÁCH:
 - Câu nhận xét ngắn gọn, đủ ý.
@@ -730,18 +726,15 @@ QUY ĐỊNH CHỐNG TRÙNG LẶP (BẮT BUỘC):
 - Nếu nhiều học sinh có cùng mức đánh giá, vẫn phải viết khác nhau.
 - Sau khi viết xong toàn bộ, phải tự kiểm tra:
   + Nếu có 2 câu giống hoặc gần giống nhau → viết lại cho khác.
-- Không được dùng lại các mẫu như:
-  "Em chăm chỉ và có cố gắng"
-  "Em học tốt và cần phát huy"
   
-  QUY TẮC THEO MỨC:
-- Mức T (Tốt):
+  QUY TẮC THEO MỨC (bắt buộc):
+- Mức T:
   + Khen ngợi điểm nổi bậc.
   + Không cần nêu hướng phát huy/khắc phục.
-- Mức Đ / H (Đạt / Hoàn thành):
+- Mức H/Đ:
   + Khen điểm đã làm được.
   + Đưa ra hướng phát huy
-- Mức C (Chưa đạt):
+- Mức C:
   + Khen nhẹ 1 điểm (ví dụ: có cố gắng).
   + Nêu hạn chế cụ thể (không nói chung chung).
   + Đưa ra hướng cải thiện rõ ràng, dễ thực hiện.
@@ -779,7 +772,7 @@ Hãy viết nhận xét cho từng học sinh theo đúng ID và trả về đú
       { role: "system", content: systemPrompt },
       { role: "user", content: userInstruction }
     ],
-    temperature: 0.85
+    temperature: 0.9
   })
 });
 
