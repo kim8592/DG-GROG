@@ -627,29 +627,25 @@ const batch = db.batch();
           };
 
         const runAI = async () => {
-            if (!isAuthValid) return;
-            if (!apiKey) {
-              setShowApiKeyModal(true);
-              showToast('Vui lòng cấu hình API Key trước', 'info', '⚙️', 3000);
-              return;
-            }
+  if (!isAuthValid) return;
+  if (!apiKey) {
+    setShowApiKeyModal(true);
+    showToast('Vui lòng cấu hình API Key trước', 'info', '⚙️', 3000);
+    return;
+  }
 
+  // LẤY CÁC TARGETS CẦN NHẬN XÉT
   const allTargets = students.filter(s => {
     if (s.status !== 'active') return false;
     const d = studentData[s.id] || {};
     const draft = draftData[s.id] || {};
     const comment = draft.comment !== undefined ? draft.comment : (d.comment || "");
     if (comment) return false;
-
-    if (viewMode === 'subject' || (systemMode === 'vnedu' && viewMode !== 'subject')) {
-      const lv = draft.level !== undefined ? draft.level : (d.level || "");
-      return !!lv;
-    } else if (systemMode === 'smas' && viewMode !== 'subject') {
+    const lv = draft.level !== undefined ? draft.level : (d.level || "");
+    if (viewMode === 'subject' || (systemMode === 'vnedu' && viewMode !== 'subject')) return !!lv;
+    if (systemMode === 'smas' && viewMode !== 'subject') {
       const list = viewMode === 'quality' ? QUALITY_CRITERIA : (viewMode === 'competency' ? GENERAL_COMPETENCIES : SPECIFIC_COMPETENCIES);
-      return list.some(c => {
-        const lv = draft[`level_${c.id}`] !== undefined ? draft[`level_${c.id}`] : (d[`level_${c.id}`] || "");
-        return !!lv;
-      });
+      return list.some(c => !!(draft[`level_${c.id}`] !== undefined ? draft[`level_${c.id}`] : d[`level_${c.id}`]));
     }
     return false;
   });
@@ -660,50 +656,31 @@ const batch = db.batch();
   }
 
   setIsGenerating(true);
-  showToast(`Đang tạo nhận xét cho ${allTargets.length} học sinh...`, 'info', '⏳', 2000);
-
-  const BATCH_SIZE = 3; // Giữ mức 3 em để văn phong hay nhất
   let successCount = 0;
+  const BATCH_SIZE = 3;
+
+  // LẤY NỘI DUNG PROMPT (SỬA LỖI NOT DEFINED)
+  // Nếu biến systemPrompt không tồn tại, ta sẽ lấy giá trị mặc định hoặc từ một biến state tương ứng
+  const finalSystemPrompt = typeof systemPrompt !== 'undefined' ? systemPrompt : "Bạn là giáo viên Tiểu học Việt Nam, viết nhận xét học sinh theo Thông tư 27 dưới dạng JSON.";
+  const finalAiPrompt = typeof aiPrompt !== 'undefined' ? aiPrompt : "";
 
   for (let i = 0; i < allTargets.length; i += BATCH_SIZE) {
     const batch = allTargets.slice(i, i + BATCH_SIZE);
     
-    // Thu thập dữ liệu ngữ cảnh cho nhóm 3 em
     const studentContexts = batch.map(stu => {
       const d = studentData[stu.id] || {};
       const draft = draftData[stu.id] || {};
       let info = "";
-      
       if (viewMode === 'subject') {
-        const subName = subjects.find(s => s.id === selectedSubId)?.name;
         const lv = draft.level !== undefined ? draft.level : (d.level || "");
-        info = `Môn: ${subName}, Mức: ${lv}`;
-      } else if (systemMode === 'vnedu' && viewMode !== 'subject') {
-        const list = viewMode === 'quality' ? QUALITY_CRITERIA : (viewMode === 'competency' ? GENERAL_COMPETENCIES : SPECIFIC_COMPETENCIES);
-        const criteriaName = list.find(c => c.id === selectedCriteriaId)?.name;
-        const lv = draft.level !== undefined ? draft.level : (d.level || "");
-        info = `Tiêu chí: ${criteriaName}, Mức: ${lv}`;
+        info = `Mức đạt: ${lv}`;
       } else {
-        const list = viewMode === 'quality' ? QUALITY_CRITERIA : (viewMode === 'competency' ? GENERAL_COMPETENCIES : SPECIFIC_COMPETENCIES);
-        const details = list.map(c => {
-          const lv = draft[`level_${c.id}`] !== undefined ? draft[`level_${c.id}`] : (d[`level_${c.id}`] || "");
-          return lv ? `${c.name} mức ${lv}` : null;
-        }).filter(Boolean).join('; ');
-        info = `Đánh giá tổng hợp: ${details}`;
+        info = "Dựa trên các mức đạt tiêu chí giáo viên đã chọn";
       }
       return { studentId: stu.id, studentName: stu.name, context: info, note: draft.note || d.note || "" };
     });
 
-    // SỬ DỤNG ĐÚNG CÁC BIẾN TỪ WEB CỦA BẠN (systemPrompt và aiPrompt)
-    const currentInstruction = `Ghi chú riêng của giáo viên:
-${aiPrompt}
-
-Số học sinh cần nhận xét đợt này: ${studentContexts.length}
-
-Danh sách học sinh:
-${JSON.stringify(studentContexts)}
-
-Hãy viết nhận xét cho từng học sinh theo đúng ID và trả về đúng ${studentContexts.length} nhận xét.`;
+    const userInstruction = `Ghi chú giáo viên: ${finalAiPrompt}\n\nDanh sách học sinh:\n${JSON.stringify(studentContexts)}\n\nTrả về đúng cấu trúc JSON với ${studentContexts.length} học sinh.`;
 
     try {
       const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -715,8 +692,8 @@ Hãy viết nhận xét cho từng học sinh theo đúng ID và trả về đú
         body: JSON.stringify({
           model: "llama-3.3-70b-versatile",
           messages: [
-            { role: "system", content: systemPrompt }, // Biến này lấy từ ô nhập liệu trên Web của bạn
-            { role: "user", content: currentInstruction }
+            { role: "system", content: finalSystemPrompt },
+            { role: "user", content: userInstruction }
           ],
           temperature: 1.0,
           presence_penalty: 0.8
@@ -728,7 +705,7 @@ Hãy viết nhận xét cho từng học sinh theo đúng ID và trả về đú
 
       let jsonText = result.choices?.[0]?.message?.content;
       if (jsonText) {
-        let cleanText = jsonText.trim().replace(/```json|```/g, "").trim();
+        const cleanText = jsonText.trim().replace(/```json|```/g, "").trim();
         const results = JSON.parse(cleanText);
 
         setDraftData(prev => {
@@ -741,20 +718,19 @@ Hãy viết nhận xét cho từng học sinh theo đúng ID và trả về đú
         successCount += Object.keys(results).length;
       }
 
-      // Nghỉ 2.5 giây giữa các đợt để reset AI và tránh 503
+      // NGHỈ GIỮA CÁC ĐỢT GỌI
       if (i + BATCH_SIZE < allTargets.length) {
-        await new Promise(r => setTimeout(r, 2500));
+        await new Promise(r => setTimeout(r, 2000));
       }
 
     } catch (e) {
-      console.error(e);
-      showToast('Lỗi đợt này, đang bỏ qua nhóm tiếp theo...', 'error', '❌', 3000);
-      await new Promise(r => setTimeout(r, 4000));
+      console.error("Lỗi đợt gọi:", e);
+      showToast('Có lỗi xảy ra ở đợt này, đang bỏ qua...', 'error', '❌', 2000);
     }
   }
 
   setIsGenerating(false);
-  showToast(`Hoàn thành tạo ${successCount}/${allTargets.length} nhận xét!`, 'success', '✅', 3000);
+  showToast(`Đã hoàn thành ${successCount} học sinh`, 'success', '✅', 3000);
 };
 
           const handleSendZalo = (studentId) => {
