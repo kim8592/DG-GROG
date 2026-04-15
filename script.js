@@ -667,7 +667,7 @@ const batch = db.batch();
             setIsGenerating(true);
             showToast(`Đang tạo nhận xét cho ${allTargets.length} học sinh...`, 'info', '⏳', 2000);
             
-            const BATCH_SIZE = allTargets.length;
+            const BATCH_SIZE = 5;
             let successCount = 0;
             for (let i = 0; i < allTargets.length; i += BATCH_SIZE) {
               const batch = allTargets.slice(i, i + BATCH_SIZE);
