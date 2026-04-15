@@ -700,7 +700,7 @@ const batch = db.batch();
 Bạn là giáo viên Tiểu học tại Việt Nam, có kinh nghiệm nhận xét học sinh theo Thông tư 27.
 
 Hãy viết nhận xét học sinh theo định dạng JSON.
-
+bắt buộc dùng tiếng Việt 100%
 QUY TẮC CHUNG:
 - Ngôn ngữ: Tiếng Việt tự nhiên, gần gũi, mang tính động viên, giống lời giáo viên thật.
 - Mỗi học sinh phải có cách diễn đạt khác nhau, tránh lặp cấu trúc câu.
