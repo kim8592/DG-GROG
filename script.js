@@ -664,88 +664,37 @@ const batch = db.batch();
               return; 
             }
 
-           const delay = (ms) => new Promise(res => setTimeout(res, ms));
-
-async function runGenerate() {
-  setIsGenerating(true);
-  showToast(`Đang tạo nhận xét cho ${allTargets.length} học sinh...`, 'info', '⏳', 2000);
-
-  const BATCH_SIZE = 5;
-  let successCount = 0;
-
-  try {
-    for (let i = 0; i < allTargets.length; i += BATCH_SIZE) {
-      const batch = allTargets.slice(i, i + BATCH_SIZE);
-
-      const studentContexts = batch.map(stu => {
-        const d = studentData[stu.id] || {};
-        const draft = draftData[stu.id] || {};
-        let info = "";
-
-        if (viewMode === 'subject') {
-          const subName = subjects.find(s => s.id === selectedSubId)?.name;
-          const lv = draft.level !== undefined ? draft.level : (d.level || "");
-          info = `Môn: ${subName}, Mức: ${lv}`;
-
-        } else if (systemMode === 'vnedu' && viewMode !== 'subject') {
-          const list = viewMode === 'quality'
-            ? QUALITY_CRITERIA
-            : (viewMode === 'competency'
-              ? GENERAL_COMPETENCIES
-              : SPECIFIC_COMPETENCIES);
-
-          const criteriaName = list.find(c => c.id === selectedCriteriaId)?.name;
-          const lv = draft.level !== undefined ? draft.level : (d.level || "");
-          info = `Tiêu chí: ${criteriaName}, Mức: ${lv}`;
-
-        } else {
-          const list = viewMode === 'quality'
-            ? QUALITY_CRITERIA
-            : (viewMode === 'competency'
-              ? GENERAL_COMPETENCIES
-              : SPECIFIC_COMPETENCIES);
-
-          const details = list.map(c => {
-            const lv = draft[`level_${c.id}`] !== undefined
-              ? draft[`level_${c.id}`]
-              : (d[`level_${c.id}`] || "");
-
-            return lv ? `${c.name} đạt mức ${lv}` : null;
-          }).filter(Boolean).join('; ');
-
-          info = `Đánh giá tổng hợp: ${details}`;
-        }
-
-        return {
-          studentId: stu.id,
-          studentName: stu.name,
-          context: info,
-          note: draft.note || d.note || ""
-        };
-      });
-
-      // 👉 GỌI AI (PHẢI CÓ await)
-      const result = await callAI(studentContexts);
-
-      if (result) {
-        successCount += batch.length;
-      }
-
-      // 👉 NGHỈ GIỮA CÁC LẦN GỌI (tránh rate limit)
-      if (i + BATCH_SIZE < allTargets.length) {
-        await delay(1200); // bạn có thể chỉnh 1000–2000
-      }
-    }
-
-    showToast(`✅ Hoàn thành! Đã tạo ${successCount} nhận xét`, 'success', '🎉', 3000);
-
-  } catch (err) {
-    console.error(err);
-    showToast('❌ Có lỗi khi tạo nhận xét', 'error', '❌', 3000);
-  }
-
-  setIsGenerating(false);
-}
+          setIsGenerating(true);
+            showToast(`Đang tạo nhận xét cho ${allTargets.length} học sinh...`, 'info', '⏳', 2000);
+            
+            const BATCH_SIZE = 5;
+            let successCount = 0;
+            for (let i = 0; i < allTargets.length; i += BATCH_SIZE) {
+              const batch = allTargets.slice(i, i + BATCH_SIZE);
+              const studentContexts = batch.map(stu => {
+                const d = studentData[stu.id] || {};
+                const draft = draftData[stu.id] || {};
+                let info = "";
+                
+                if (viewMode === 'subject') {
+                  const subName = subjects.find(s=>s.id===selectedSubId)?.name;
+                  const lv = draft.level !== undefined ? draft.level : (d.level || "");
+                  info = `Môn: ${subName}, Mức: ${lv}`;
+                } else if (systemMode === 'vnedu' && viewMode !== 'subject') {
+                  const list = viewMode === 'quality' ? QUALITY_CRITERIA : (viewMode === 'competency' ? GENERAL_COMPETENCIES : SPECIFIC_COMPETENCIES);
+                  const criteriaName = list.find(c => c.id === selectedCriteriaId)?.name;
+                  const lv = draft.level !== undefined ? draft.level : (d.level || "");
+                  info = `Tiêu chí: ${criteriaName}, Mức: ${lv}`;
+                } else {
+                  const list = viewMode === 'quality' ? QUALITY_CRITERIA : (viewMode === 'competency' ? GENERAL_COMPETENCIES : SPECIFIC_COMPETENCIES);
+                  const details = list.map(c => {
+                    const lv = draft[`level_${c.id}`] !== undefined ? draft[`level_${c.id}`] : (d[`level_${c.id}`] || "");
+                    return lv ? `${c.name} đạt mức ${lv}` : null;
+                  }).filter(Boolean).join('; ');
+                  info = `Đánh giá tổng hợp: ${details}`;
+                }
+                return { studentId: stu.id, studentName: stu.name, context: info, note: draft.note || d.note || "" };
+              });
 
             
                const systemPrompt = `
