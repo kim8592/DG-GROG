@@ -700,7 +700,7 @@ const batch = db.batch();
 Bạn là giáo viên Tiểu học tại Việt Nam, có kinh nghiệm nhận xét học sinh theo Thông tư 27.
 
 Hãy viết nhận xét học sinh theo định dạng JSON.
-bắt buộc dùng tiếng Việt 100%
+
 QUY TẮC CHUNG:
 - Ngôn ngữ: Tiếng Việt tự nhiên, gần gũi, mang tính động viên, giống lời giáo viên thật.
 - Mỗi học sinh phải có cách diễn đạt khác nhau, tránh lặp cấu trúc câu.
@@ -709,6 +709,7 @@ QUY TẮC CHUNG:
 - Không nhắc lại tên học sinh.
 - Không lặp lại tên môn học hoặc tên tiêu chí trong câu.
 - Tuyệt đối không ghi lại mức đạt (T, H/Đ, C).
+- Bắt buộc dùng tiếng Việt 100%.
 NỘI DUNG NHẬN XÉT:
 - Luôn khen điểm mạnh cụ thể (không khen chung chung).
 - Nhận xét phải dựa sát vào dữ liệu (mức đánh giá).
@@ -764,7 +765,6 @@ Danh sách học sinh:
 ${JSON.stringify(studentContexts)}
 
 Hãy viết nhận xét cho từng học sinh theo đúng ID và trả về đúng ${studentContexts.length} nhận xét.`;
-
               
               try {
                 const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -779,7 +779,7 @@ Hãy viết nhận xét cho từng học sinh theo đúng ID và trả về đú
       { role: "system", content: systemPrompt },
       { role: "user", content: userInstruction }
     ],
-    temperature: 0.9
+    temperature: 0.8
   })
 });
 
