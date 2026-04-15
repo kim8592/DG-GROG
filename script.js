@@ -626,75 +626,81 @@ const batch = db.batch();
             } finally { setIsSaving(false); }
           };
 
-                const runAI = async () => {
-            if (!isAuthValid) return;
-            if (!apiKey) {
-              setShowApiKeyModal(true);
-              showToast('Vui lòng cấu hình API Key trước', 'info', '⚙️', 3000);
-              return;
-            }
+                const delay = (ms) => new Promise(res => setTimeout(res, ms));
 
-            const allTargets = students.filter(s => {
-              if (s.status !== 'active') return false;
-              const d = studentData[s.id] || {};
-              const draft = draftData[s.id] || {};
-              const comment = draft.comment !== undefined ? draft.comment : (d.comment || "");
-              
-              if (comment) return false;
+const runAI = async () => {
+  if (!isAuthValid) return;
 
-              if (viewMode === 'subject') {
-                const level = draft.level !== undefined ? draft.level : (d.level || "");
-                return !!level;
-              } else if (systemMode === 'vnedu' && viewMode !== 'subject') {
-                const level = draft.level !== undefined ? draft.level : (d.level || "");
-                return !!level;
-              } else if (systemMode === 'smas' && viewMode !== 'subject') {
-                const list = viewMode === 'quality' ? QUALITY_CRITERIA : (viewMode === 'competency' ? GENERAL_COMPETENCIES : SPECIFIC_COMPETENCIES);
-                return list.some(c => {
-                  const level = draft[`level_${c.id}`] !== undefined ? draft[`level_${c.id}`] : (d[`level_${c.id}`] || "");
-                  return !!level;
-                });
-              }
+  if (!apiKey) {
+    setShowApiKeyModal(true);
+    showToast('Vui lòng cấu hình API Key trước', 'info', '⚙️', 3000);
+    return;
+  }
 
-              return false;
-            });
+  const allTargets = students.filter(s => {
+    if (s.status !== 'active') return false;
 
-            if (!allTargets.length) { 
-              showToast('Không có học sinh nào cần nhận xét (chưa được chọn mức đạt hoặc đã có nhận xét)', 'info', '⚠️', 4000);
-              return; 
-            }
+    const d = studentData[s.id] || {};
+    const draft = draftData[s.id] || {};
+    const comment = draft.comment !== undefined ? draft.comment : (d.comment || "");
 
-            setIsGenerating(true);
-            showToast(`Đang tạo nhận xét cho ${allTargets.length} học sinh...`, 'info', '⏳', 2000);
-            
-            const BATCH_SIZE = allTargets.length;
-            let successCount = 0;
-            for (let i = 0; i < allTargets.length; i += BATCH_SIZE) {
-              const batch = allTargets.slice(i, i + BATCH_SIZE);
-              const studentContexts = batch.map(stu => {
-                const d = studentData[stu.id] || {};
-                const draft = draftData[stu.id] || {};
-                let info = "";
-                
-                if (viewMode === 'subject') {
-                  const subName = subjects.find(s=>s.id===selectedSubId)?.name;
-                  const lv = draft.level !== undefined ? draft.level : (d.level || "");
-                  info = `Môn: ${subName}, Mức: ${lv}`;
-                } else if (systemMode === 'vnedu' && viewMode !== 'subject') {
-                  const list = viewMode === 'quality' ? QUALITY_CRITERIA : (viewMode === 'competency' ? GENERAL_COMPETENCIES : SPECIFIC_COMPETENCIES);
-                  const criteriaName = list.find(c => c.id === selectedCriteriaId)?.name;
-                  const lv = draft.level !== undefined ? draft.level : (d.level || "");
-                  info = `Tiêu chí: ${criteriaName}, Mức: ${lv}`;
-                } else {
-                  const list = viewMode === 'quality' ? QUALITY_CRITERIA : (viewMode === 'competency' ? GENERAL_COMPETENCIES : SPECIFIC_COMPETENCIES);
-                  const details = list.map(c => {
-                    const lv = draft[`level_${c.id}`] !== undefined ? draft[`level_${c.id}`] : (d[`level_${c.id}`] || "");
-                    return lv ? `${c.name} đạt mức ${lv}` : null;
-                  }).filter(Boolean).join('; ');
-                  info = `Đánh giá tổng hợp: ${details}`;
-                }
-                return { studentId: stu.id, studentName: stu.name, context: info, note: draft.note || d.note || "" };
-              });
+    if (comment) return false;
+
+    const level = draft.level !== undefined ? draft.level : (d.level || "");
+    return !!level;
+  });
+
+  if (!allTargets.length) {
+    showToast('Không có học sinh cần nhận xét', 'info', '⚠️', 3000);
+    return;
+  }
+
+  setIsGenerating(true);
+  showToast(`Đang tạo nhận xét cho ${allTargets.length} học sinh...`, 'info', '⏳', 2000);
+
+  const BATCH_SIZE = 5;
+  let successCount = 0;
+
+  try {
+    for (let i = 0; i < allTargets.length; i += BATCH_SIZE) {
+
+      const batch = allTargets.slice(i, i + BATCH_SIZE);
+
+      const studentContexts = batch.map(stu => {
+        const d = studentData[stu.id] || {};
+        const draft = draftData[stu.id] || {};
+
+        return {
+          studentId: stu.id,
+          studentName: stu.name,
+          context: `Mức: ${draft.level || d.level || ""}`,
+          note: draft.note || d.note || ""
+        };
+      });
+
+      // 👉 GỌI AI
+      const res = await callAI(studentContexts);
+
+      if (res) {
+        successCount += batch.length;
+      }
+
+      // 👉 NGHỈ GIỮA CÁC LẦN GỌI
+      if (i + BATCH_SIZE < allTargets.length) {
+        await delay(1200); // nghỉ 1.2 giây
+      }
+    }
+
+    showToast(`✅ Hoàn thành ${successCount} học sinh`, 'success', '🎉', 3000);
+
+  } catch (error) {
+    console.error(error);
+    showToast('❌ Lỗi chạy AI', 'error', '❌', 3000);
+  }
+
+  setIsGenerating(false);
+};
+
             
                const systemPrompt = `
 Bạn là giáo viên Tiểu học tại Việt Nam, có kinh nghiệm nhận xét học sinh theo Thông tư 27.
