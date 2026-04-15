@@ -779,7 +779,7 @@ Hãy viết nhận xét cho từng học sinh theo đúng ID và trả về đú
       { role: "system", content: systemPrompt },
       { role: "user", content: userInstruction }
     ],
-    temperature: 0.8
+    temperature: 0.9
   })
 });
 
