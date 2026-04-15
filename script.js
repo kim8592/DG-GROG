@@ -760,58 +760,72 @@ ${JSON.stringify(studentContexts)}
 
 Hãy viết nhận xét cho từng học sinh theo đúng ID và trả về đúng ${studentContexts.length} nhận xét.`;
               
-              try {
-                const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    "Authorization": `Bearer ${apiKey}`
-  },
-  body: JSON.stringify({
-    model: "llama-3.3-70b-versatile",
-    messages: [
-      { role: "system", content: systemPrompt },
-      { role: "user", content: userInstruction }
-    ],
-    temperature: 0.9,
-          top_p: 0.9
-  })
-});
+              async function callAI(userInstruction) {
+  try {
+    const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: "llama-3.3-70b-versatile",
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: userInstruction }
+        ],
+        temperature: 0.9,
+        top_p: 0.9
+      })
+    });
 
-const result = await res.json();
+    const result = await res.json();
 
-if (result.error) {
-  console.error("API error:", result.error.message);
-  showToast("Lỗi API: " + result.error.message, "error", "❌", 4000);
-  break;
-}
-
-let jsonText = result.choices?.[0]?.message?.content;
-
-                if (jsonText) {
-  let cleanText = jsonText.trim();
-
-  if (cleanText.startsWith("```")) {
-    cleanText = cleanText.replace(/```json|```/g, "").trim();
-  }
-
-  const results = JSON.parse(cleanText);
-
-                  const delay = (ms) => new Promise(res => setTimeout(res, ms));
-
-for (const sId of Object.keys(results)) {
-  const comment = results[sId];
-
-  setDraftData(prev => ({
-    ...prev,
-    [sId]: {
-      ...(prev[sId] || {}),
-      comment: comment
+    if (result.error) {
+      console.error("API error:", result.error.message);
+      showToast("Lỗi API: " + result.error.message, "error", "❌", 4000);
+      return null; // ❌ bỏ break → dùng return
     }
-  }));
 
-  await delay(500); // 👈 chỉnh tốc độ ở đây
+    let jsonText = result.choices?.[0]?.message?.content;
+
+    if (jsonText) {
+      let cleanText = jsonText.trim();
+
+      if (cleanText.startsWith("```")) {
+        cleanText = cleanText.replace(/```json|```/g, "").trim();
+      }
+
+      const results = JSON.parse(cleanText);
+
+      // 👉 delay đặt ở đây
+      const delay = (ms) => new Promise(res => setTimeout(res, ms));
+
+      for (const sId of Object.keys(results)) {
+        const comment = results[sId];
+
+        setDraftData(prev => ({
+          ...prev,
+          [sId]: {
+            ...(prev[sId] || {}),
+            comment: comment
+          }
+        }));
+
+        await delay(500); // 👉 nghỉ giữa từng học sinh
+      }
+
+      return results;
+    }
+
+    return null;
+
+  } catch (err) {
+    console.error("Lỗi:", err);
+    return null;
+  }
 }
+
 
                   successCount += Object.keys(results).length;
                 }
