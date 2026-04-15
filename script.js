@@ -708,7 +708,7 @@ QUY TẮC CHUNG:
 - Tuyệt đối không dùng từ "cô", "thầy" trong câu nhận xét.
 - Không nhắc lại tên học sinh.
 - Không lặp lại tên môn học hoặc tên tiêu chí trong câu.
-
+- Tuyệt đối không ghi lại mức đạt (T, H/Đ, C).
 NỘI DUNG NHẬN XÉT:
 - Luôn khen điểm mạnh cụ thể (không khen chung chung).
 - Nhận xét phải dựa sát vào dữ liệu (mức đánh giá).
