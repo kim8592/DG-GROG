@@ -728,7 +728,7 @@ QUY TẮC THEO MỨC:
   + Đưa ra hướng cải thiện rõ ràng, dễ thực hiện.
 
 PHONG CÁCH:
-- Ưu tiên câu ngắn, rõ ý.
+- Câu nhận xét ngắn gọn, đủ ý.
 - Tránh lặp từ giữa các học sinh.
 - Giống nhận xét viết tay của giáo viên.
 
@@ -779,7 +779,7 @@ Hãy viết nhận xét cho từng học sinh theo đúng ID và trả về đú
       { role: "system", content: systemPrompt },
       { role: "user", content: userInstruction }
     ],
-    temperature: 0.8
+    temperature: 0.85
   })
 });
 
