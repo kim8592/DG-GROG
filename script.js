@@ -667,7 +667,7 @@ const batch = db.batch();
   setIsGenerating(true);
   showToast(`Đang tạo nhận xét cho ${allTargets.length} học sinh...`, 'info', '⏳', 2000);
   
-  const BATCH_SIZE = 3;
+  const BATCH_SIZE = 1;
   let successCount = 0;
   let failedCount = 0;
   const delay = (ms) => new Promise(res => setTimeout(res, ms));
@@ -721,7 +721,7 @@ BÁM SÁT DỮ LIỆU:
 - Phải dựa vào mức đánh giá từng môn/năng lực.
 - Nhận xét đúng điểm mạnh/yếu của từng em.
 - Không viết chung chung.
-QUY TẮC THEO MỨC:
+QUY TẮC THEO MỨC (bắt buộc):
 - Mức T (Tốt):
   + Khen rõ điểm nổi bật.
   + Không cần nêu hướng phát huy/khắc phục
@@ -854,7 +854,7 @@ Hãy viết nhận xét cho từng học sinh theo đúng ID và trả về đú
 
     // ✅ DỪNG 1 GIÂY TRƯỚC KHI GỌI BATCH TIẾP THEO
     if (i + BATCH_SIZE < allTargets.length) {
-      await delay(2000);
+      await delay(3000);
     }
   }
 
