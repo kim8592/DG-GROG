@@ -715,6 +715,7 @@ Hãy viết nhận xét học sinh theo định dạng JSON.
 QUAN TRỌNG:
 - Bắt buộc chỉ dùng 100% tiếng Việt.
 - Tuyệt đối không dùng từ nước ngoài/ký tự lạ.
+- Bắt buộc câu nhận xét phải theo đúng QUY TẮC THEO MỨC ĐẠT
 NGUYÊN TẮC VIẾT:
 - Mỗi nhận xét bắt đầu bằng "Em".
 - Không nhắc tên học sinh.
