@@ -290,39 +290,33 @@ const runAIGeneration = async (config) => {
     });
 
     const systemPrompt = isSmAsMode
-  ? `Bạn là giáo viên tiểu học Việt Nam. SỬA LẠI nhận xét từ công việc/kỹ năng.
-
+      ? `Bạn là giáo viên tiểu học Việt Nam. SỬA LẠI nhận xét từ công việc/kỹ năng.
 HƯỚNG DẪN THEO MỨC:
-- MỨC T: Khen điểm nổi bật.
-- MỨC H/Đ: Khen điểm nổi bật và nêu hướng phát huy.
-- MỨC C: Khen cố gắng, nêu hạn chế, nêu hướng khắc phục.
-
-QUY TẮC QUAN TRỌNG:
-- Nếu câu gốc sai chính tả, thiếu chữ hoặc vô nghĩa → PHẢI viết lại thành câu rõ nghĩa.
+  MỨC T: Khen điểm nổi bậc.
+  MỨC H/Đ: Khen điểm nổi bật và nêu hướng phát huy.
+  MỨC C: Khen cố gắng, nêu hạn chế, nêu hướng khắc phục.
+RULE QUAN TRỌNG: 
+- MỖI nhận xét PHẢI khác nhau hoàn toàn, không lặp
+- Nếu câu gốc sai chính tả, thiếu chữ, hoặc chưa rõ nghĩa → PHẢI tự hiểu và viết lại thành câu hoàn chỉnh, rõ nghĩa.
 - KHÔNG giữ nguyên câu sai.
-- GIỮ ý chính nếu hiểu được, nếu không rõ thì VIẾT LẠI HỢP LÝ theo ngữ cảnh học sinh tiểu học.
-- Nếu không thể hiểu nội dung gốc, hãy tạo nhận xét phù hợp dựa trên từ khóa gần nhất.
-- MỖI nhận xét PHẢI khác nhau hoàn toàn, không lặp.
-- PHẢI có 10-15 từ.
-- Bắt đầu bằng "Em".
-- Tích hợp nội dung "(Ghi chú: ...)" vào câu tự nhiên.
-- XÓA tất cả dấu [] và "(Ghi chú: ...)".
-- Không để response rỗng.
-OUTPUT: [ID]|||[Nhận xét 10-15 từ]`
-  : `Sửa lại các nhận xét tiểu học cho hay hơn, tự nhiên hơn.
-
-QUY TẮC QUAN TRỌNG:
-- Nếu câu gốc sai chính tả, thiếu chữ hoặc vô nghĩa → PHẢI viết lại thành câu rõ nghĩa.
+- PHẢI có 10-15 từ
+- Bắt đầu "Em"
+- Nếu có "(Ghi chú: ...)" thì TÍCH HỢP tự nhiên vào nhận xét, VÍ DỤ thay vì nói "nhẩm nhanh" ở cuối, hãy viết "với khả năng nhẩm nhanh rất tốt"
+- XÓA tất cả dấu ngoặc []
+- KHÔNG để "(Ghi chú: ...)" trong kết quả final
+- Không để response rỗng
+- OUTPUT MỖI EM 1 DÒNG: [ID]|||[Nhận xét 10-15 từ]`
+      : `Sửa lại các nhận xét tiểu học cho hay hơn, tự nhiên hơn.
+RULE QUAN TRỌNG:
+- MỖI nhận xét PHẢI khác nhau hoàn toàn, không lặp
+- Nếu câu gốc sai chính tả, thiếu chữ, hoặc chưa rõ nghĩa → PHẢI tự hiểu và viết lại thành câu hoàn chỉnh, rõ nghĩa.
 - KHÔNG giữ nguyên câu sai.
-- GIỮ ý chính nếu hiểu được, nếu không rõ thì VIẾT LẠI HỢP LÝ theo ngữ cảnh học sinh tiểu học.
-- Nếu không thể hiểu nội dung gốc, hãy tạo nhận xét phù hợp dựa trên từ khóa gần nhất.
-- MỖI nhận xét PHẢI khác nhau hoàn toàn, không lặp.
-- Giữ nguyên ý chính, mức đánh giá (nếu xác định được).
-- PHẢI có 15-20 từ.
-- Tích hợp "(Ghi chú: ...)" vào câu tự nhiên.
-- XÓA tất cả dấu [] và "(Ghi chú: ...)".
-- Không để response rỗng.
-OUTPUT: [ID]|||[Nhận xét 20-25 từ]`;
+- Giữ nguyên ý chính, mức đánh giá
+- PHẢI có 15-20 từ
+- Nếu có "(Ghi chú: ...)" thì TÍCH HỢP tự nhiên vào câu, VÍ DỤ thay vì nói "nhẩm nhanh" ở cuối, hãy viết "với khả năng nhẩm nhanh rất tốt"
+- XÓA tất cả dấu ngoặc [] và "(Ghi chú: ...)"
+- Không để response rỗng
+- OUTPUT MỖI EM 1 DÒNG: [ID]|||[Nhận xét 20-25 từ]`;
 
     const userInstruction = `Dữ liệu nhận xét (ID|thông tin):
 ${commentsList}
