@@ -1147,7 +1147,7 @@ const App = () => {
           <div className="bg-white w-full max-w-lg rounded-3xl p-8 shadow-2xl border-t-8 border-emerald-600">
             <div className="flex items-center gap-3 mb-6">
               <div className="p-3 bg-emerald-100 text-emerald-600 rounded-2xl text-2xl">🔑</div>
-              <h3 className="text-xl font-black uppercase text-slate-800">API KEY GROP</h3>
+              <h3 className="text-xl font-black uppercase text-slate-800">API KEY Groq</h3>
             </div>
             <p className="text-sm text-slate-600 mb-4">Liên hệ: <a href="https://groq.com/" className="text-blue-600 underline">Vui lòng nháy vào đây lấy API Key</a></p>
             <input type="password" className="w-full p-4 bg-slate-50 border-2 border-slate-300 rounded-xl mb-6 font-mono text-sm outline-none" placeholder="Nhập API Key..." value={apiKey} onChange={e => setApiKey(e.target.value)} />
