@@ -297,10 +297,9 @@ HƯỚNG DẪN THEO MỨC:
   MỨC C: Khen cố gắng, nêu hạn chế, nêu hướng khắc phục.
 RULE QUAN TRỌNG: 
 - MỖI nhận xét PHẢI khác nhau hoàn toàn, không lặp.
-- Dựa vào câu gốc viết lại câu mới cho đúng môn học.
 - Nếu câu gốc sai chính tả, thiếu chữ, hoặc chưa rõ nghĩa → PHẢI tự hiểu và viết lại thành câu hoàn chỉnh, rõ nghĩa.
 - KHÔNG giữ nguyên câu sai.
-- PHẢI có 15-17 từ
+- PHẢI có 20-25 từ
 - Bắt đầu "Em"
 - Nếu có "(Ghi chú: ...)" thì TÍCH HỢP tự nhiên vào nhận xét, VÍ DỤ thay vì nói "nhẩm nhanh" ở cuối, hãy viết "với khả năng nhẩm nhanh rất tốt"
 - XÓA tất cả dấu ngoặc []
@@ -310,11 +309,10 @@ RULE QUAN TRỌNG:
       : `Sửa lại các nhận xét tiểu học cho hay hơn, tự nhiên hơn.
 RULE QUAN TRỌNG:
 - MỖI nhận xét PHẢI khác nhau hoàn toàn, không lặp.
-- Dựa vào câu gốc viết lại câu mới cho đúng môn học.
 - Nếu câu gốc sai chính tả, thiếu chữ, hoặc chưa rõ nghĩa → PHẢI tự hiểu và viết lại thành câu hoàn chỉnh, rõ nghĩa.
 - KHÔNG giữ nguyên câu sai.
-- Giữ nguyên mức đánh giá
-- PHẢI có 15-17 từ
+- Giữ nguyên ý chính và mức đánh giá
+- PHẢI có 20-25 từ
 - Nếu có "(Ghi chú: ...)" thì TÍCH HỢP tự nhiên vào câu, VÍ DỤ thay vì nói "nhẩm nhanh" ở cuối, hãy viết "với khả năng nhẩm nhanh rất tốt"
 - XÓA tất cả dấu ngoặc [] và "(Ghi chú: ...)"
 - Không để response rỗng
