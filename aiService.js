@@ -387,7 +387,7 @@ QUAN TRỌNG: Đảm bảo từ khóa được ráp vào câu một cách tự n
           console.warn(`⚠️ Response không hợp lệ, retry...`);
           retryCount++;
           if (retryCount < maxRetries) {
-            await delay(2000);
+            await delay(1000);
           }
         }
 
@@ -395,7 +395,7 @@ QUAN TRỌNG: Đảm bảo từ khóa được ráp vào câu một cách tự n
         console.warn(`❌ Error batch ${batchIdx + 1}:`, error.message);
         retryCount++;
         if (retryCount < maxRetries) {
-          await delay(2000);
+          await delay(1000);
         }
       }
     }
@@ -446,7 +446,7 @@ QUAN TRỌNG: Đảm bảo từ khóa được ráp vào câu một cách tự n
     }
 
     if (batchIdx < batchCount - 1) {
-      await delay(3000);
+      await delay(2000);
     }
   }
 
