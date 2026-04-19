@@ -446,7 +446,7 @@ QUAN TRỌNG: Đảm bảo từ khóa được ráp vào câu một cách tự n
     }
 
     if (batchIdx < batchCount - 1) {
-      await delay(2000);
+      await delay(3000);
     }
   }
 
