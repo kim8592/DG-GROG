@@ -311,7 +311,6 @@ RULE QUAN TRỌNG:
 - MỖI nhận xét PHẢI khác nhau hoàn toàn, không lặp.
 - Nếu câu gốc sai chính tả, thiếu chữ, hoặc chưa rõ nghĩa → PHẢI tự hiểu và viết lại thành câu hoàn chỉnh, rõ nghĩa.
 - KHÔNG giữ nguyên câu sai.
-- Giữ nguyên ý chính và mức đánh giá
 - PHẢI có 20-25 từ
 - Nếu có "(Ghi chú: ...)" thì TÍCH HỢP tự nhiên vào câu, VÍ DỤ thay vì nói "nhẩm nhanh" ở cuối, hãy viết "với khả năng nhẩm nhanh rất tốt"
 - XÓA tất cả dấu ngoặc [] và "(Ghi chú: ...)"
