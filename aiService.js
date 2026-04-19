@@ -361,7 +361,7 @@ QUAN TRỌNG: Đảm bảo từ khóa được ráp vào câu một cách tự n
             'Authorization': `Bearer ${apiKey}`
           },
           body: JSON.stringify({ 
-            model: 'openai/gpt-oss-120b',
+            model: 'llama-3.3-70b-versatile',
             messages: [
               { role: 'system', content: systemPrompt },
               { role: 'user', content: userInstruction }
