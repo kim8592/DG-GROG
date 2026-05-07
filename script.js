@@ -210,27 +210,7 @@ if (hasDevelopment) {
   comment = comment.replace(/tiếp tục\s+tiếp tục/gi, "tiếp tục");
   comment = comment.replace(/Tiếp tục\s+tiếp tục/gi, "Tiếp tục");
 
-  // =========================
-  // 4. THÊM HƯỚNG PHÁT HUY NẾU CHƯA CÓ
-  // =========================
-  if (!/tiếp tục|phát huy|rèn luyện|cố gắng|duy trì|nâng cao/i.test(comment)) {
-
-    const encourages = [
-      "Em tiếp tục phát huy nhé.",
-      "Em tiếp tục cố gắng để tiến bộ hơn.",
-      "Em duy trì tinh thần học tập tích cực nhé.",
-      "Em tiếp tục rèn luyện để đạt kết quả tốt hơn.",
-      "Em cố gắng thêm để ngày càng tiến bộ.",
-      "Em phát huy khả năng của mình hơn nữa."
-    ];
-
-    comment = comment.replace(/[.!?]\s*$/, "");
-
-    const endText =
-      encourages[Math.floor(Math.random() * encourages.length)];
-
-    comment += ". " + endText;
-  }
+ 
 // ==========================================
   // 5. VIẾT HOA SAU DẤU CHẤM (MỚI THÊM)
   // ==========================================
