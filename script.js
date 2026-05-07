@@ -211,14 +211,7 @@ if (hasDevelopment) {
   comment = comment.replace(/Tiếp tục\s+tiếp tục/gi, "Tiếp tục");
 
   // =========================
-  // 4. THÊM HƯỚNG PHÁT HUY NẾU CHƯA CÓ
-  // =========================
-  if (!/tiếp tục|phát huy|rèn luyện|cố gắng|duy trì|nâng cao/i.test(comment)) {
-
-    const encourages = [
-     
-    ];
-
+ 
     comment = comment.replace(/[.!?]\s*$/, "");
 
     const endText =
