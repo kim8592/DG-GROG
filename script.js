@@ -1310,10 +1310,27 @@ const exportSMAS = async () => {
                     {showNote ? '👁️' : '🚫'} Ghi chú
                   </button>
                 </div>
-                <button onClick={exportExcel} disabled={students.length === 0} className="flex items-center gap-2 px-6 py-2.5 bg-emerald-600 text-white rounded-lg text-[11px] font-black uppercase hover:bg-emerald-700 shadow-md">
-                  📥 Xuất Excel
-                </button>
-              </div>
+                {/* Nhóm bên phải: Cụm 3 nút chức năng */}
+  <div className="flex flex-wrap items-center gap-2">
+    
+    {/* Nút Xuất Excel */}
+    <button 
+      onClick={exportExcel} 
+      disabled={students.length === 0} 
+      className="flex items-center gap-2 px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-300 text-white rounded-lg text-[11px] font-black uppercase shadow-md transition-all hover:scale-105 active:scale-95"
+    >
+      📥 Xuất Excel
+    </button>
+    
+    {/* Nút TẢI LÊN SMAS - Đã thêm hiệu ứng đầy đủ */}
+    <button 
+      onClick={exportSMAS} 
+      className="flex items-center gap-2 px-6 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-lg text-[11px] font-black uppercase shadow-md transition-all hover:scale-105 active:scale-95"
+    >
+      🚀 TẢI LÊN SMAS
+    </button>
+  </div>
+</div>
             </div>
 
             {/* TABLE */}
