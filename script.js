@@ -1229,24 +1229,54 @@ const exportSMAS = async () => {
               <span className="text-indigo-300 text-[9px] font-bold uppercase mt-0.5 italic tracking-wider">TỐI ƯU NHẬN XÉT HỌC SINH TIỂU HỌC BẰNG AI</span>
             </div>
           </div>
+<div className="flex flex-col items-center gap-3">
+         <div className="flex bg-indigo-950/50 p-1 rounded-xl gap-1 items-center flex-wrap justify-center">
+  
+  {/* 1. NÚT CÀI ĐẶT: Đã cập nhật code dán thông minh hơn */}
+<a
+  href={`javascript:(async()=>{try{const t=await navigator.clipboard.readText();if(!t)return;const k=prompt('Nhập 1: Giữa kì, 2: Cuối kì','1');if(!k)return;const lines=t.trim().split('\\n');const rows=Array.from(document.querySelectorAll('tr')).filter(r=>r.querySelector('input.k-input, div[id^="span_"]'));let j=0;rows.forEach((row)=>{if(j>=lines.length)return;const nameElement=row.querySelector('td:nth-child(2) span, td:nth-child(2) a, .text-danger');const isRedColor=nameElement&&(getComputedStyle(nameElement).color==='rgb(255, 0, 0)'||nameElement.classList.contains('text-danger'));const isLocked=row.classList.contains('disabled')||row.querySelector('input[disabled]');if(isRedColor||isLocked){console.log('Bỏ qua HS nghỉ/tên đỏ');return}const p=lines[j].split('||');if(p.length<2){j++;return}const levels=p[0].split('|').filter(v=>v.trim()!=='');const comment=p[1];let allInputs=Array.from(row.querySelectorAll('input.k-input')).filter(i=>!i.disabled&&!i.readOnly&&i.offsetParent!==null);if(levels.length>0&&allInputs.length>0){let targetInputs=[];if(allInputs.length>=levels.length*2){const mid=allInputs.length/2;targetInputs=(k==='1')?allInputs.slice(0,mid):allInputs.slice(mid)}else{targetInputs=allInputs}levels.forEach((val,idx)=>{if(targetInputs[idx]&&val){const inp=targetInputs[idx];const setter=Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype,'value').set;setter.call(inp,val.toUpperCase());['input','change','blur'].forEach(ev=>inp.dispatchEvent(new Event(ev,{bubbles:true})))}})}const allDivs=Array.from(row.querySelectorAll('div[id^="span_"], span[id^="span_"]'));let targetDiv=(allDivs.length>1)?((k==='1')?allDivs[0]:allDivs[allDivs.length-1]):allDivs[0];if(targetDiv){targetDiv.innerText=comment;const td=targetDiv.closest('td');if(td){const tx=td.querySelector('textarea');if(tx){const setter=Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype,'value').set;setter.call(tx,comment);['input','change','blur'].forEach(ev=>tx.dispatchEvent(new Event(ev,{bubbles:true})))}}}j++});alert('Đã chuyển xong!');}catch(e){alert('Lỗi: '+e)}})();`}
+  onClick={(e) => e.preventDefault()}
+  title="Nhấn giữ và kéo lên thanh dấu trang"
+  className="relative flex items-center justify-center px-2 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-[10px] font-black uppercase transition-all cursor-move overflow-hidden shadow-lg active:scale-95 z-10"
+>
+  <span className="opacity-0">SMAS TỰ ĐỘNG</span>
+  <div className="absolute inset-0 flex items-center justify-center bg-inherit pointer-events-none whitespace-nowrap px-1">
+    ✨ CÀI ĐẶT
+  </div>
+</a>
 
-          <div className="flex flex-col items-center gap-3">
-            <div className="flex bg-indigo-950/50 p-1 rounded-xl gap-1 items-center">
-              {['smas', 'vnedu'].map(sys => (
-                <button key={sys} onClick={() => { setSystemMode(sys); setSelectedCriteriaId(''); setDraftData({}); }} className={`px-6 py-2.5 rounded-lg text-[11px] font-black uppercase transition-all ${systemMode === sys ? 'bg-white text-indigo-900 shadow-lg' : 'text-indigo-300 hover:text-white'}`}>
-                  🌐 {sys}
-                </button>
-              ))}
-              <div className="w-px h-6 bg-indigo-700 mx-1"></div>
-              <div className="flex items-center gap-1.5">
-                <button onClick={handleSaveAllToFirebase} disabled={isSaving || draftCount === 0} className={`flex items-center gap-2 px-4 py-2.5 rounded-l-lg text-[11px] font-black uppercase transition-all shadow-md active:scale-95 ${draftCount > 0 ? 'bg-amber-500 text-white hover:bg-amber-600 animate-pulse' : 'bg-indigo-800 text-indigo-400 opacity-50 cursor-not-allowed'}`}>
-                  {isSaving ? '⏳' : '💾'} Lưu ({draftCount})
-                </button>
-                <button onClick={() => setShowApiKeyModal(true)} className={`p-2.5 rounded-r-lg transition-all ${apiKey ? 'bg-emerald-600 text-white' : 'bg-red-500 text-white animate-bounce'} shadow-md`}>
-                  ⚙️
-                </button>
-              </div>
-            </div>
+  {/* 2. Nhóm chọn hệ thống (SMAS - VNEDU): Chuyển sang rounded-lg */}
+  {['smas', 'vnedu'].map((sys) => (
+    <button 
+      key={sys} 
+      onClick={() => { setSystemMode(sys); setSelectedCriteriaId(''); setDraftData({}); }} 
+      className={`px-6 py-2.5 text-[11px] font-black uppercase transition-all rounded-lg ${systemMode === sys ? 'bg-white text-indigo-900 shadow-lg' : 'text-indigo-300 hover:text-white'}`}
+    >
+      🌐 {sys}
+    </button>
+  ))}
+
+  {/* Vạch ngăn cách dọc */}
+  <div className="w-px h-6 bg-indigo-700 mx-1"></div>
+
+  {/* 3. Cụm nút Lưu và API */}
+  <div className="flex items-center gap-1.5">
+    <button 
+      onClick={handleSaveAllToFirebase} 
+      disabled={isSaving || draftCount === 0} 
+      className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-[11px] font-black uppercase transition-all shadow-md active:scale-95 ${draftCount > 0 ? 'bg-amber-500 text-white hover:bg-amber-600 animate-pulse' : 'bg-indigo-800 text-indigo-400 opacity-50 cursor-not-allowed'}`}
+    >
+      {isSaving ? '⏳' : '💾'} Lưu ({draftCount})
+    </button>
+
+    <button 
+      onClick={() => setShowApiKeyModal(true)} 
+      className={`p-2.5 rounded-lg transition-all ${apiKey ? 'bg-emerald-600 text-white' : 'bg-red-500 text-white animate-bounce'} shadow-md`}
+    >
+      ⚙️
+    </button>
+  </div>
+</div>
             <div className="flex bg-indigo-950/50 p-1 rounded-xl gap-1 flex-wrap justify-center">
               {['subject', 'competency', 'quality', 'specific'].map(m => (
                 <button key={m} onClick={() => { setViewMode(m); setSelectedCriteriaId(''); setDraftData({}); }} className={`px-4 py-2.5 rounded-lg text-[11px] font-black uppercase transition-all ${viewMode === m ? 'bg-indigo-600 text-white shadow-lg' : 'text-indigo-300 hover:text-white'}`}>
