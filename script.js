@@ -502,7 +502,47 @@ const App = () => {
       showToast("Lỗi đổi mật khẩu", "error", "❌");
     }
   }, [user, showToast]);
+const exportSMAS = async () => {
+  // 1. Lấy tất cả các dòng (tr) đang hiển thị
+  const rows = Array.from(document.querySelectorAll("tbody tr")).filter(row => {
+    return row.offsetHeight > 0; // Chỉ lấy những dòng đang hiện
+  });
 
+  const dataString = rows
+    .map(row => {
+      // 2. XỬ LÝ NHẬN XÉT: 
+      const allTextareas = Array.from(row.querySelectorAll("textarea"));
+      const nhanXetArea = allTextareas[allTextareas.length - 1]; 
+      const nhanXet = nhanXetArea ? nhanXetArea.value.trim() : "";
+      
+      if (!nhanXet) return null;
+
+      // 3. XỬ LÝ MỨC ĐẠT:
+      const allGroups = Array.from(row.querySelectorAll('div.flex.justify-center'));
+      
+      const danhSachMucDat = allGroups
+        .map(group => {
+          const activeBtn = Array.from(group.querySelectorAll('button')).find(btn => 
+            !btn.className.includes('text-slate-400') && btn.innerText.length <= 2
+          );
+          return activeBtn ? activeBtn.innerText.trim() : ""; 
+        })
+        .filter(val => val !== ""); // CHỖ MỚI: Loại bỏ những cột không được tích chọn (giá trị rỗng)
+
+      // Bây giờ chuỗi nối lại sẽ chỉ có: T|T|T|Đ|Đ
+      const chuoiMucDat = danhSachMucDat.join('|');
+      return `${chuoiMucDat}||${nhanXet}`;
+    })
+    .filter(line => line !== null) 
+    .join('\n');
+
+  try {
+    await navigator.clipboard.writeText(dataString);
+    alert("Bạn có muốn chuyển dữ liệu nhận xét sang SMAS không?");
+  } catch (err) {
+    alert("Lỗi copy!");
+  }
+};
   // ===== EFFECTS =====
   useEffect(() => {
     const _v = (s) => btoa(unescape(encodeURIComponent(s)));
