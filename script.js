@@ -1225,7 +1225,7 @@ const exportSMAS = async () => {
                   </div>
                 )}
               </div>
-              <h1 className="text-lg md:text-xl font-black uppercase leading-none tracking-tight">ĐÁNH GIÁ THƯỜNG XUYÊN</h1>
+              <h1 className="text-lg md:text-xl font-black uppercase leading-none tracking-tight">QUẢN LÝ ĐÁNH GIÁ HS TIỂU HỌC</h1>
               <span className="text-indigo-300 text-[9px] font-bold uppercase mt-0.5 italic tracking-wider">TỐI ƯU NHẬN XÉT HỌC SINH TIỂU HỌC BẰNG AI</span>
             </div>
           </div>
