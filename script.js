@@ -1317,7 +1317,7 @@ const exportSMAS = async () => {
                   <div className="relative">
                     <span className="absolute left-4 top-1/2 -translate-y-1/2 text-indigo-400 text-lg">✨</span>
                     <input className="w-full bg-slate-50 border-2 border-slate-300 rounded-xl pl-12 pr-4 py-4 text-sm font-semibold outline-none focus:border-indigo-500 transition-all" 
-                      placeholder="VD: hãy random nội dung sau: biết cộng có nhớ, giải toán nhanh, hiểu khái niệm hình học. Câu nhận xét đúng 20 từ " 
+                      placeholder="VD: hãy random nội dung sau: biết cộng có nhớ, giải toán nhanh, hiểu khái niệm hình học. Câu nhận xét khoảng 50 kí tự " 
                       value={aiPrompt} 
                       onChange={e => setAiPrompt(e.target.value)}
                     />
